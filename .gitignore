@@ -49,3 +49,7 @@ data/chroma_db/
 # OS
 .DS_Store
 Thumbs.db
+
+# Private Local Documentation / Interview Dossier
+docs/interview_dossier/
+
