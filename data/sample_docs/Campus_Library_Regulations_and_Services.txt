@@ -1,0 +1,40 @@
+UNIVERSITY CENTRAL LIBRARY (UNIVERSITÄTSBIBLIOTHEK)
+USER GUIDELINES, CIRCULATION POLICY & OPENING HOURS
+Document Code: UB-REG-2024-V2
+Applicable to: All enrolled students, faculty, and registered visiting researchers.
+
+1. OPERATING HOURS & BUILDING ACCESS
+- Main Campus Central Library:
+  Monday through Friday: 08:00 - 24:00 (Midnight)
+  Saturday and Sunday: 09:00 - 22:00
+  Public Holidays: Closed (Notice posted on online portal 14 days in advance)
+- Computer Lab & Terminal Center: 24/7 access with validated Student Card (CampusCard RFID).
+- Information Desk & Circulation Counter:
+  Monday through Friday: 09:00 - 18:00
+  Self-checkout kiosks (Selbstverbuchungsstationen) operate at all hours when the building is open.
+
+2. STUDY ZONES & HOUSE RULES
+- Silent Study Halls (Großer Lesesaal):
+  Strict silence must be maintained at all times. Mobile phones must be set to silent mode. Phone calls, audio playback without headphones, and whispering are strictly prohibited.
+- Refreshments & Food Policy:
+  Eating food is prohibited in all study and computer areas. Only beverages in completely leak-proof, transparent, sealable bottles are permitted. Coffee cups with disposable lids or open cans are strictly forbidden.
+- Group Study Rooms (Gruppenarbeitsräume):
+  Rooms 101 to 115 are designated for collaborative academic work. Rooms can be booked via the online Library Booking Portal up to 7 calendar days in advance for groups of 3 to 8 students. Maximum booking duration is 3 consecutive hours per group per day.
+- Lockers and Cloakroom:
+  Backpacks and large bags must be stored in the electronic lockers in the foyer. Lockers operate with the student card. Lockers are reset automatically every night at 02:00 AM; items left overnight are collected by campus security and stored in Lost & Found for a €10 retrieval administrative fee.
+
+3. BORROWING PRIVILEGES & LOAN PERIODS
+- Standard Collection:
+  Enrolled students may borrow up to 25 physical books simultaneously.
+  Standard loan duration: 28 calendar days.
+  Automatic renewals: Items are automatically renewed up to 3 times (each for 28 days), provided no reservation (Vormerkung) has been placed by another patron.
+- Short-Loan & Semester Reserve Collection (Semesterapparat):
+  Red-labeled books may only be used within the library premises during daytime hours. Overnight loans are permitted from 19:00 until 10:00 the following business day.
+- Overdue Fines and Penalties:
+  First week overdue: €1.50 per book per week.
+  Second reminder: €5.00 administrative fee plus accumulated daily rate.
+  Third reminder: Borrowing privileges are suspended campus-wide until all outstanding items are returned and balances cleared.
+
+4. INTER-LIBRARY LOANS & DIGITAL REPOSITORY
+- Digital access: All students have remote off-campus access to SpringerLink, IEEE Xplore, ACM Digital Library, and Elsevier ScienceDirect via institutional VPN / eduGAIN Shibboleth proxy.
+- Inter-library loan (Fernleihe): Books not available locally can be requested through Bavarian inter-library loan (BVB) for a subsidized processing fee of €1.50 per requested title. Delivery time is typically 5 to 10 business days.

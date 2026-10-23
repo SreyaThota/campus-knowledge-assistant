@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  # ============================================================================
+  # 1. FastAPI Backend (RAG Engine & Vector API)
+  # ============================================================================
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: campus_rag_backend
+    restart: unless-stopped
+    command: python -m uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - ENVIRONMENT=production
+      - LOG_LEVEL=INFO
+      - EMBEDDING_PROVIDER=huggingface
+      - EMBEDDING_MODEL_NAME=sentence-transformers/all-MiniLM-L6-v2
+      - CHROMA_PERSIST_DIRECTORY=/app/data/chroma_db
+      - CHROMA_COLLECTION_NAME=campus_knowledge_base
+      - SIMILARITY_THRESHOLD=0.35
+      - TOP_K=4
+      - LLM_PROVIDER=auto
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_MODEL=llama3:8b
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+    volumes:
+      - chroma_data:/app/data/chroma_db
+      - ./data/sample_docs:/app/data/sample_docs:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - campus_net
+
+  # ============================================================================
+  # 2. Streamlit Modern Frontend UI
+  # ============================================================================
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: campus_rag_frontend
+    restart: unless-stopped
+    command: streamlit run frontend/app.py --server.port=8501 --server.address=0.0.0.0
+    ports:
+      - "8501:8501"
+    environment:
+      - BACKEND_API_URL=http://backend:8000/api/v1
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - campus_net
+
+  # ============================================================================
+  # 3. Local Ollama LLM Service (GDPR-Compliant Local Inference)
+  # ============================================================================
+  ollama:
+    image: ollama/ollama:latest
+    container_name: campus_rag_ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+    networks:
+      - campus_net
+    # Enable GPU passthrough if NVIDIA Container Toolkit is installed
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+networks:
+  campus_net:
+    driver: bridge
+
+volumes:
+  chroma_data:
+    name: campus_chroma_data
+  ollama_models:
+    name: campus_ollama_models
