@@ -37,6 +37,8 @@ htmlcov/
 
 # ChromaDB & Local Persistence
 data/chroma_db/
+backend/data/
+**/chroma_db/
 *.db
 *.sqlite3
 
