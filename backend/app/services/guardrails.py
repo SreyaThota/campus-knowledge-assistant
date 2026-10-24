@@ -1,16 +1,94 @@
 import re
+import sys
+from pathlib import Path
 from typing import List, Tuple, Dict, Any, Optional
 from app.models.schemas import DocumentChunk, SourceCitation
+from app.core.config import settings, PROJECT_ROOT
 from app.core.logging import logger
+
+# Ensure project root is on sys.path for gate module imports
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 EXACT_REFUSAL_PHRASE = "Information not found in provided campus documents."
 
 class GuardrailEngine:
     """
-    RAG Safety and Grounding Guardrails.
+    RAG Safety, Grounding Guardrails, and Learned Scope Gate.
     Enforces strict citation rules, out-of-domain refusal enforcement,
-    and hallucination mitigation.
+    early scope classification, and hallucination mitigation.
     """
+
+    _scope_gate_predictor = None
+    _scope_gate_load_attempted = False
+
+    @classmethod
+    def get_scope_gate_predictor(cls):
+        """Returns the loaded ScopeGatePredictor singleton or None if disabled/unavailable."""
+        if not settings.ENABLE_SCOPE_GATE:
+            return None
+
+        if cls._scope_gate_predictor is None and not cls._scope_gate_load_attempted:
+            cls._scope_gate_load_attempted = True
+            ckpt_path = Path(settings.SCOPE_GATE_CHECKPOINT)
+            if not ckpt_path.is_absolute():
+                ckpt_path = PROJECT_ROOT / ckpt_path
+
+            if ckpt_path.exists():
+                try:
+                    from gate.predict import ScopeGatePredictor
+                    cls._scope_gate_predictor = ScopeGatePredictor(
+                        checkpoint_path=ckpt_path,
+                        device="cpu",
+                    )
+                    logger.info(
+                        f"Loaded Learned Scope Gate predictor from {ckpt_path} "
+                        f"(threshold={cls._scope_gate_predictor.threshold:.4f})"
+                    )
+                except Exception as e:
+                    logger.warning(f"Failed to load Scope Gate checkpoint ({e}). Operating in fallback mode.")
+            else:
+                logger.warning(f"Scope Gate checkpoint not found at {ckpt_path}. Operating in fallback mode.")
+
+        return cls._scope_gate_predictor
+
+    @classmethod
+    def check_query_scope(cls, query: str) -> Dict[str, Any]:
+        """
+        Runs the learned scope gate classifier on an incoming query.
+        Returns:
+            Dict containing:
+                - is_in_scope: bool
+                - oos_score: float
+                - threshold: float
+                - status: str ('IN_SCOPE', 'REFUSAL_OUT_OF_SCOPE', or 'GATE_BYPASSED')
+        """
+        predictor = cls.get_scope_gate_predictor()
+        if predictor is None:
+            return {
+                "is_in_scope": True,
+                "oos_score": 0.0,
+                "threshold": settings.SCOPE_GATE_THRESHOLD,
+                "status": "GATE_BYPASSED",
+            }
+
+        try:
+            res = predictor.predict_single(query, threshold=settings.SCOPE_GATE_THRESHOLD)
+            is_in_scope = bool(res["is_in_scope"])
+            return {
+                "is_in_scope": is_in_scope,
+                "oos_score": float(res["oos_score"]),
+                "threshold": float(res["decision_threshold"]),
+                "status": "IN_SCOPE" if is_in_scope else "REFUSAL_OUT_OF_SCOPE",
+            }
+        except Exception as e:
+            logger.warning(f"Scope gate inference error ({e}). Allowing query to proceed to retrieval.")
+            return {
+                "is_in_scope": True,
+                "oos_score": 0.0,
+                "threshold": settings.SCOPE_GATE_THRESHOLD,
+                "status": "GATE_BYPASSED",
+            }
 
     @staticmethod
     def construct_system_prompt() -> str:

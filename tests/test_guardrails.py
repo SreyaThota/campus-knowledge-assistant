@@ -66,3 +66,30 @@ def test_end_to_end_out_of_domain_query_refusal():
     assert response.answer == EXACT_REFUSAL_PHRASE
     assert response.guardrail_status == "REFUSAL_NOT_IN_CONTEXT"
     assert response.confidence_score == 0.0
+
+def test_scope_gate_direct_classification():
+    """Verify that GuardrailEngine.check_query_scope accurately flags out-of-scope queries."""
+    oos_result = GuardrailEngine.check_query_scope("Explain the mathematical proof of Fermat's Last Theorem.")
+    assert "is_in_scope" in oos_result
+    assert "oos_score" in oos_result
+    assert "threshold" in oos_result
+
+    # Out-of-scope query should have high OOS score and be classified as out-of-scope
+    assert oos_result["is_in_scope"] is False
+    assert oos_result["status"] == "REFUSAL_OUT_OF_SCOPE"
+    assert oos_result["oos_score"] >= oos_result["threshold"]
+
+    # In-scope query should be recognized as in-scope
+    in_result = GuardrailEngine.check_query_scope("What are the Central Library opening hours on weekends and can I bring food?")
+    assert in_result["is_in_scope"] is True
+    assert in_result["status"] == "IN_SCOPE"
+
+def test_scope_gate_early_refusal_bypasses_vector_retrieval():
+    """Verify that an out-of-scope query is intercepted before vector retrieval."""
+    request = QueryRequest(query="Write a python script to scrape stock prices from the web.")
+    response = rag_engine.query(request)
+    assert response.answer == EXACT_REFUSAL_PHRASE
+    assert response.guardrail_status == "REFUSAL_NOT_IN_CONTEXT"
+    assert "Learned Scope Gate" in response.model_used
+    assert len(response.sources) == 0
+    assert response.confidence_score == 0.0

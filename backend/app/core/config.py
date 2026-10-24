@@ -50,6 +50,11 @@ class Settings(BaseSettings):
     # Sample Documents directory
     SAMPLE_DOCS_DIRECTORY: str = str(PROJECT_ROOT / "data" / "sample_docs")
 
+    # Learned Scope Gate parameters
+    ENABLE_SCOPE_GATE: bool = True
+    SCOPE_GATE_CHECKPOINT: str = str(PROJECT_ROOT / "results" / "checkpoints" / "scope_gate_seed_2026.pt")
+    SCOPE_GATE_THRESHOLD: float = 0.3219
+
     @property
     def is_production(self) -> bool:
         return self.ENVIRONMENT.lower() == "production"

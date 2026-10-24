@@ -63,8 +63,12 @@ mlruns/
 .DS_Store
 Thumbs.db
 
-# Private Local Documentation / Interview Dossier
+# Private Local Documentation / Study Notes / Interview Dossier
 docs/interview_dossier/
+docs/study_notes/
+*study_notes*
+*interview_dossier*
 
 # External Marketing & Demonstration Assets
 linkedin_assets/
+scripts/capture_live_demo.py

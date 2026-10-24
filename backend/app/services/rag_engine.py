@@ -45,6 +45,24 @@ class RAGEngine:
 
         logger.info(f"Processing query: '{query_text}' (top_k={top_k}, threshold={threshold})")
 
+        # 0. Pre-retrieval Scope Gate Verification (Refuse Out-of-Scope queries early)
+        scope_check = GuardrailEngine.check_query_scope(query_text)
+        if not scope_check["is_in_scope"]:
+            elapsed_ms = round((time.perf_counter() - start_time) * 1000, 2)
+            logger.info(
+                f"Query rejected by Learned Scope Gate (OOS score={scope_check['oos_score']:.4f} >= threshold={scope_check['threshold']:.4f}). "
+                "Returning immediate deterministic refusal without retrieval."
+            )
+            return QueryResponse(
+                query=query_text,
+                answer=EXACT_REFUSAL_PHRASE,
+                sources=[],
+                confidence_score=0.0,
+                guardrail_status="REFUSAL_NOT_IN_CONTEXT",
+                latency_ms=elapsed_ms,
+                model_used=f"Learned Scope Gate (Pre-retrieval refusal, score={scope_check['oos_score']:.3f})",
+            )
+
         # 1. Embed query vector
         query_embedding = self.embedding_service.embed_query(query_text)
 

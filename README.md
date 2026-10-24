@@ -12,7 +12,6 @@
 An enterprise-grade **Retrieval-Augmented Generation (RAG)** system engineered to index complex institutional campus documentation (examination regulations, degree curricula, university library policies, and administrative guidelines). Delivers strictly grounded responses with verifiable source citations, cosine similarity thresholding, and automated hallucination containment.
 
 ---
-
 ## 🏛️ Enterprise Architecture & Design Principles
 
 ```
@@ -31,32 +30,33 @@ An enterprise-grade **Retrieval-Augmented Generation (RAG)** system engineered t
 +------------------------------------------+----------------------------------------+
                                            |
     +--------------------------------------+------------------------------------+
-    | Ingestion Pipeline                   | Retrieval & Guardrail Engine       |
-    | - pypdf / Regex Parser               | - Cosine Distance HNSW Index       |
-    | - Recursive Splitter (750 / 150)     | - Similarity Cutoff Filter (0.35)  |
-    | - Metadata Enrichment (Pages, Docs)  | - Anti-Hallucination Gate          |
+    | Stage 1: Pre-Retrieval Learned Gate  | Ingestion Pipeline                 |
+    | - Fine-tuned MiniLM Transformer      | - pypdf / Regex Document Parser    |
+    | - Sub-15ms CPU Binary Scope Filter   | - Recursive Splitter (750 / 150)   |
+    | - Early Out-of-Domain Refusal        | - Metadata Enrichment (Pages, Docs)|
     +--------------------------------------+------------------------------------+
-                                           |
+                                           | (if In-Scope)
     +--------------------------------------+------------------------------------+
-    | Vector Store & Embeddings            | LLM Generation Layer               |
+    | Stage 2: Dense Retrieval & Cosine    | Stage 3: LLM Inference & Citations |
     | - ChromaDB (Persistent Disk HNSW)    | - Ollama (Llama 3 / Mistral)       |
-    | - HF sentence-transformers (384-d)   | - OpenAI API (Optional)            |
-    | - Zero-Cloud-Egress GDPR mode        | - Deterministic Grounded Fallback  |
+    | - Similarity Cutoff Filter (0.35)    | - OpenAI API (Optional)            |
+    | - Context Assembly with Citations    | - Anti-Hallucination Guardrails    |
     +--------------------------------------+------------------------------------+
 ```
 
 ### Core Design Principles
 
-1. **Data Sovereignty & GDPR / DSGVO Compliance by Design:**
+1. **Multi-Stage Defense-in-Depth Safety Architecture:**
+   * **Stage 1 (Pre-Retrieval Learned Scope Gate):** Incoming student queries first pass through a fine-tuned PyTorch classifier (`all-MiniLM-L6-v2` + classification head, $\tau = 0.3219$). Out-of-domain queries (e.g. general coding, philosophy proofs, crypto, recipe generation) are intercepted in sub-15ms on CPU with deterministic refusal, avoiding wasteful vector retrieval and LLM context calls.
+   * **Stage 2 (Cosine Similarity Gate):** In-scope queries proceed to dense retrieval over persistent ChromaDB HNSW index. Candidate chunks scoring below cosine similarity $\theta = 0.35$ are discarded before context assembly.
+   * **Stage 3 (Deterministic Refusal & Grounding Gate):** If no context satisfies the threshold, the system triggers an immediate refusal:
+     > `"Information not found in provided campus documents."`
+     Every factual statement requires citation tracking with document name, page number, and similarity metrics.
+2. **Data Sovereignty & GDPR / DSGVO Compliance by Design:**
    * **Zero Cloud Egress:** All embeddings and vector operations run strictly on-premise. Local vector search is powered by `sentence-transformers/all-MiniLM-L6-v2` and an embedded, persistent ChromaDB instance.
    * **Air-Gapped LLM Execution:** Integrates directly with local **Ollama** instances (`llama3:8b`, `mistral:7b`), eliminating outbound network transmission of institutional queries and user data.
-2. **Hallucination Containment & Safety Gates:**
-   * **Similarity Cutoff Filter:** Candidate chunks scoring below cosine similarity $\theta = 0.35$ are discarded before context assembly.
-   * **Deterministic Refusal:** If no context satisfies the threshold, the system triggers an immediate early exit without invoking the LLM, returning the standardized refusal:
-     > `"Information not found in provided campus documents."`
-   * **Verifiable Source Attribution:** Every factual statement requires citation tracking with document name, page number, and similarity metrics.
 3. **Decoupled Service Architecture:**
-   * **Layered Design:** Distinct separation of concerns between document ingestion (`document_parser.py`, `chunker.py`), vector storage (`vector_store.py`), guardrails (`guardrails.py`), and inference orchestration (`rag_engine.py`).
+   * **Layered Design:** Distinct separation of concerns between document ingestion (`document_parser.py`, `chunker.py`), learned scope gate (`gate/`), vector storage (`vector_store.py`), guardrails (`guardrails.py`), and inference orchestration (`rag_engine.py`).
    * **Pydantic V2 Schemas:** Strict type safety, input validation, and automatic OpenAPI schema generation.
 
 ---
@@ -72,15 +72,19 @@ flowchart TD
         D --> E[("Persistent ChromaDB<br/>HNSW Cosine Vector Store")]
     end
 
-    subgraph RETRIEVAL["RAG Retrieval & Guardrails"]
-        F["User Question"] --> G["Query Vectorization"]
-        G --> H["ChromaDB Vector Retrieval<br/>(Top-K = 4)"]
+    subgraph PRE_RETRIEVAL["Stage 1: Pre-Retrieval Learned Scope Gate"]
+        F["User Question"] --> G{"Learned Scope Gate<br/>(MiniLM Head, tau = 0.3219)"}
+        G -- "Out of Scope" --> J["Deterministic Guardrail Refusal<br/>'Information not found in provided campus documents.'"]
+    end
+
+    subgraph RETRIEVAL["Stage 2: Dense Retrieval & Cosine Gate"]
+        G -- "In Scope" --> H["ChromaDB Vector Retrieval<br/>(Top-K = 4)"]
         H --> I{"Cosine Similarity Gate<br/>(Score >= 0.35?)"}
-        I -- "Below Threshold" --> J["Strict Guardrail Refusal<br/>'Information not found in provided campus documents.'"]
+        I -- "Below Threshold" --> J
         I -- "Passed Threshold" --> K["Context Framing with Citations"]
     end
 
-    subgraph GENERATION["Grounded Inference & Response"]
+    subgraph GENERATION["Stage 3: Grounded Inference & Verification"]
         K --> L["LLM Provider<br/>(Ollama / OpenAI / Fallback)"]
         L --> M["Response Validator & Calibrator<br/>(Confidence Score & Citation Matcher)"]
         M --> N["Streamlit UI / FastAPI JSON Response<br/>(Answer + Sources + Confidence)"]
@@ -217,7 +221,18 @@ A fine-grained threshold sweep evaluated on the validation split across the thre
   - *Learned Gate (Mean):* $F_1 = \mathbf{0.3852}$, Recall = $0.4444$, In-Scope Acceptance = $\mathbf{0.6237}$.
 - **Hard Borderline Subset ($N = 51$: 23 In, 28 Out):**
   - *Exemplar Cosine:* $F_1 = 0.6038$, Recall = $0.5714$, Precision = $0.6400$, In-Scope Acceptance = $0.6087$.
-  - *Learned Gate (Seed 2026):* $F_1 = \mathbf{0.6296}$, Recall = $\mathbf{0.6071}$, Precision = $\mathbf{0.6538}$, In-Scope Acceptance = $0.6087$.
+##### Campus Evaluation Set & Human Authoring Protocol
+To benchmark out-of-scope refusal on realistic student interactions without data leakage or contamination, the evaluation set is frozen at `data/campus_eval/campus_questions.csv` ($N = 140$, SHA-256 `69fb89da...`), combining 110 initial baseline queries with 30 authentic human-authored queries.
+
+**Human Query Authoring Guidelines & Grounding Protocol:**
+1. **Balanced Distribution:** A minimum of 30 queries split equally between in-scope ($N = 15$, answerable by sample docs) and out-of-scope ($N = 15$).
+2. **Realistic Student Syntax:** Emulate authentic student phrasing rather than clean administrative grammar:
+   - *Slang & abbreviations:* e.g., `"ects needed for thesis reg"`, `"whr is bib"`, `"tum card rfid defekt"`.
+   - *Search fragments & typos:* e.g., `"late book return penalty"`, `"libary opning hours"`.
+   - *Bilingual & Code-Switched (Denglish):* e.g., `"kann ich kaffee im lesesaal trinken?"`, `"how many versuche for fpso exam"`.
+3. **No Verbatim Copying:** Formulate questions using independent vocabulary without copying sentences or section titles directly from institutional documents.
+4. **Campus-Adjacent Borderline Hard Cases:** Include near-misses that sound institutional but are unanswerable by the current document collection (e.g. cafeteria menus, university sports gym, dormitory housing, career fairs, PhD salaries).
+5. **Automated Schema & Ground-Truth Verification:** All additions must pass `scripts/validate_human_rows.py` to ensure valid labels (`in`/`out`), valid document grounding references, and zero query duplicates prior to evaluation freeze.
 
 ### What Did Not Work
 1. **Nearest-Neighbor Baseline Won on the Held-Out Test Split ($F_1 = 0.6230$ vs $0.5494$):** On the true held-out CLINC test split ($N = 5{,}500$), the Exemplar Cosine Nearest Neighbor baseline outperformed the Learned Scope Gate by +7.36 $F_1$ points. The fine-tuned transformer model suffered a substantial generalization drop from validation ($0.7356 \to 0.5494$) due to conservative OOS recall ($38.8\%$ on test vs $65.3\%$ on validation), while Exemplar Cosine remained rock-solid ($0.6224 \to 0.6230$).
@@ -271,7 +286,7 @@ campus-knowledge-assistant/
 │   │   │   ├── chunker.py            # RecursiveTextChunker with semantic overlap
 │   │   │   ├── embedding_service.py  # HuggingFace & OpenAI embedding provider
 │   │   │   ├── vector_store.py       # ChromaDB persistent client & cosine search
-│   │   │   ├── guardrails.py         # Grounding gate & confidence calibration
+│   │   │   ├── guardrails.py         # Grounding gate, learned scope gate integration & confidence calibration
 │   │   │   ├── llm_provider.py       # Ollama, OpenAI & deterministic fallback
 │   │   │   └── rag_engine.py         # End-to-end pipeline orchestration
 │   │   └── main.py                   # FastAPI app entrypoint & auto-indexing lifespan
@@ -279,16 +294,27 @@ campus-knowledge-assistant/
 ├── frontend/
 │   ├── app.py                        # Streamlit glassmorphism UI with citations
 │   └── requirements.txt
+├── gate/
+│   ├── data.py                       # CLINC150 binary dataset loader & split leakage checks
+│   ├── model.py                      # PyTorch ScopeGateClassifier (MiniLM + dropout + linear head)
+│   ├── train.py                      # Multi-seed training loop with class-weighted loss & MLflow tracking
+│   ├── baselines.py                  # TF-IDF, Centroid Cosine, Exemplar Cosine, Frozen Embedding baselines
+│   └── evaluate.py                   # Offline evaluation framework, ECE, reliability diagrams & bootstrap CIs
 ├── data/
-│   └── sample_docs/
-│       ├── TUM_Informatik_FPSO_Exam_Regulations.md     # Examination rules, retakes, attest
-│       ├── Campus_Library_Regulations_and_Services.txt # Operating hours, study halls, fines
-│       ├── MSc_Artificial_Intelligence_Curriculum.md   # Degree requirements, 120 ECTS breakdown
-│       └── Semester_Ticket_and_Enrollment_Guide.md     # Transit ticket & re-registration fees
+│   ├── sample_docs/                  # Curated campus administrative & regulatory documents
+│   │   ├── TUM_Informatik_FPSO_Exam_Regulations.md
+│   │   ├── Campus_Library_Regulations_and_Services.txt
+│   │   ├── MSc_Artificial_Intelligence_Curriculum.md
+│   │   └── Semester_Ticket_and_Enrollment_Guide.md
+│   └── campus_eval/                  # Frozen evaluation benchmark (campus_questions.csv, SHA-256 verified)
 ├── tests/
 │   ├── test_chunking.py              # Unit tests for text chunker & parser
 │   ├── test_retrieval.py             # Vector store & cosine similarity tests
-│   ├── test_guardrails.py            # Strict refusal & grounding verification
+│   ├── test_guardrails.py            # Strict refusal & learned scope gate integration tests
+│   ├── test_gate_data.py             # Split disjointness & CLINC150 dataset integrity tests
+│   ├── test_gate_model.py            # PyTorch architecture & checkpoint roundtrip tests
+│   ├── test_gate_baselines.py        # Baseline methods & threshold tuning tests
+│   ├── test_gate_evaluate.py         # Offline evaluation, ECE & bootstrap CI tests
 │   └── test_api.py                   # FastAPI TestClient endpoint integration
 ├── Dockerfile                        # Multi-stage container deployment
 ├── docker-compose.yml                # Backend, Frontend, and local Ollama orchestration
@@ -376,28 +402,47 @@ Run the automated test suite covering chunking, embeddings, vector retrieval, gu
 pytest tests/ -v
 ```
 
-All 18 tests execute in <35 seconds:
+All 37 tests execute with 100% pass status in ~19 seconds:
 ```
-tests/test_api.py::test_api_health_endpoint PASSED                    [  5%]
-tests/test_api.py::test_api_list_documents PASSED                     [ 11%]
-tests/test_api.py::test_api_query_grounded_answer PASSED              [ 16%]
-tests/test_api.py::test_api_query_out_of_domain_refusal PASSED        [ 22%]
-tests/test_api.py::test_api_upload_document PASSED                    [ 27%]
-tests/test_chunking.py::test_recursive_chunker_basic PASSED          [ 33%]
-tests/test_chunking.py::test_chunker_overlap_preservation PASSED      [ 38%]
-tests/test_chunking.py::test_chunker_multi_page_attribution PASSED   [ 44%]
-tests/test_chunking.py::test_document_parser_markdown_headers PASSED  [ 50%]
-tests/test_chunking.py::test_chunker_empty_input PASSED               [ 55%]
-tests/test_guardrails.py::test_guardrail_refusal_when_no_chunks PASSED [ 61%]
-tests/test_guardrails.py::test_guardrail_refusal_when_model_states_refusal PASSED [ 66%]
-tests/test_guardrails.py::test_guardrail_pass_grounded_citations PASSED [ 72%]
-tests/test_guardrails.py::test_end_to_end_out_of_domain_query_refusal PASSED [ 77%]
-tests/test_retrieval.py::test_embedding_dimensionality PASSED        [ 83%]
-tests/test_retrieval.py::test_vector_store_add_and_retrieve PASSED   [ 88%]
-tests/test_retrieval.py::test_vector_store_similarity_threshold_filtering PASSED [ 94%]
-tests/test_retrieval.py::test_vector_store_delete_document PASSED     [100%]
+tests/test_api.py::test_api_health_endpoint PASSED                       [  2%]
+tests/test_api.py::test_api_list_documents PASSED                        [  5%]
+tests/test_api.py::test_api_query_grounded_answer PASSED                 [  8%]
+tests/test_api.py::test_api_query_out_of_domain_refusal PASSED           [ 10%]
+tests/test_api.py::test_api_upload_document PASSED                       [ 13%]
+tests/test_chunking.py::test_recursive_chunker_basic PASSED              [ 16%]
+tests/test_chunking.py::test_chunker_overlap_preservation PASSED         [ 18%]
+tests/test_chunking.py::test_chunker_multi_page_attribution PASSED       [ 21%]
+tests/test_chunking.py::test_document_parser_markdown_headers PASSED     [ 24%]
+tests/test_chunking.py::test_chunker_empty_input PASSED                  [ 27%]
+tests/test_gate_baselines.py::test_compute_binary_metrics_at_threshold PASSED [ 29%]
+tests/test_gate_baselines.py::test_find_optimal_threshold_synthetic PASSED [ 32%]
+tests/test_gate_baselines.py::test_tfidf_baseline_end_to_end_synthetic PASSED [ 35%]
+tests/test_gate_data.py::test_synthetic_splits_integrity PASSED          [ 37%]
+tests/test_gate_data.py::test_split_disjointness_catches_leak PASSED     [ 40%]
+tests/test_gate_data.py::test_cached_clinc_splits_integrity PASSED       [ 43%]
+tests/test_gate_data.py::test_binary_labels_validity PASSED              [ 45%]
+tests/test_gate_evaluate.py::test_compute_ece_perfect_and_imperfect PASSED [ 48%]
+tests/test_gate_evaluate.py::test_reliability_diagram_generation PASSED  [ 51%]
+tests/test_gate_evaluate.py::test_bootstrap_confidence_intervals_bounds PASSED [ 54%]
+tests/test_gate_evaluate.py::test_campus_hash_verification_refuses_when_missing_or_mismatch PASSED [ 56%]
+tests/test_gate_evaluate.py::test_load_campus_dataset_schema_and_author_filtering PASSED [ 59%]
+tests/test_gate_evaluate.py::test_evaluate_single_method_end_to_end_synthetic PASSED [ 62%]
+tests/test_gate_evaluate.py::test_compute_aggregate_seed_stats PASSED    [ 64%]
+tests/test_gate_model.py::test_mean_pooling_accuracy PASSED              [ 67%]
+tests/test_gate_model.py::test_model_forward_shape PASSED                [ 70%]
+tests/test_gate_model.py::test_checkpoint_save_and_predict_roundtrip PASSED [ 72%]
+tests/test_guardrails.py::test_guardrail_refusal_when_no_chunks PASSED   [ 75%]
+tests/test_guardrails.py::test_guardrail_refusal_when_model_states_refusal PASSED [ 78%]
+tests/test_guardrails.py::test_guardrail_pass_grounded_citations PASSED  [ 81%]
+tests/test_guardrails.py::test_end_to_end_out_of_domain_query_refusal PASSED [ 83%]
+tests/test_guardrails.py::test_scope_gate_direct_classification PASSED   [ 86%]
+tests/test_guardrails.py::test_scope_gate_early_refusal_bypasses_vector_retrieval PASSED [ 89%]
+tests/test_retrieval.py::test_embedding_dimensionality PASSED            [ 91%]
+tests/test_retrieval.py::test_vector_store_add_and_retrieve PASSED       [ 94%]
+tests/test_retrieval.py::test_vector_store_similarity_threshold_filtering PASSED [ 97%]
+tests/test_retrieval.py::test_vector_store_delete_document PASSED        [100%]
 
-============================= 18 passed in 36.80s =============================
+============================= 37 passed in 19.16s =============================
 ```
 
 ---
