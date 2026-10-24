@@ -42,6 +42,17 @@ backend/data/
 *.db
 *.sqlite3
 
+# Model Checkpoints & Artifacts
+checkpoints/
+results/checkpoints/
+results/*_predictions.json
+results/diagrams/
+*.pt
+*.bin
+data/cache/
+mlruns/
+.trash/
+
 # IDEs
 .idea/
 .vscode/
