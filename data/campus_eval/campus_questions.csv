@@ -1,0 +1,141 @@
+question,label,source_doc,lang,difficulty,author,notes
+What are the opening hours of the Main Campus Central Library on weekdays?,in,Campus_Library_Regulations_and_Services.txt,en,easy,ai_draft,Section 1: Mon-Fri 08:00 - 24:00
+Bis wann hat die Universitätsbibliothek am Samstag und Sonntag geöffnet?,in,Campus_Library_Regulations_and_Services.txt,de,easy,ai_draft,Section 1: Sat-Sun 09:00 - 22:00
+How can students access the Computer Lab and Terminal Center outside standard hours?,in,Campus_Library_Regulations_and_Services.txt,en,easy,ai_draft,Section 1: 24/7 access with CampusCard RFID
+Sind Heißgetränke oder offene Dosen im Lesesaal der Bibliothek gestattet?,in,Campus_Library_Regulations_and_Services.txt,de,easy,ai_draft,Section 2: Only leak-proof transparent sealable bottles permitted; coffee cups/cans forbidden
+Can I eat lunch in the library silent study areas?,in,Campus_Library_Regulations_and_Services.txt,en,easy,ai_draft,Section 2: Eating food is prohibited in all study and computer areas
+How many days in advance can group study rooms in the library be reserved?,in,Campus_Library_Regulations_and_Services.txt,en,easy,ai_draft,Section 2: Online booking up to 7 calendar days in advance
+Wie lange darf eine Gruppe einen Gruppenarbeitsraum pro Tag maximal reservieren?,in,Campus_Library_Regulations_and_Services.txt,de,easy,ai_draft,Section 2: Maximum 3 consecutive hours per group per day for 3-8 students
+What happens if I leave my personal belongings in a library locker overnight?,in,Campus_Library_Regulations_and_Services.txt,en,easy,ai_draft,Section 2: Reset at 02:00 AM; collected by security with 10 euro retrieval fee
+How many books can an enrolled student borrow simultaneously from the central library?,in,Campus_Library_Regulations_and_Services.txt,en,easy,ai_draft,Section 3: Up to 25 physical books simultaneously
+Wie lange ist die Standardleihfrist für Bücher und wie oft wird sie automatisch verlängert?,in,Campus_Library_Regulations_and_Services.txt,de,easy,ai_draft,Section 3: Standard 28 calendar days; auto-renewed up to 3 times
+Are red-labeled books from the semester reserve eligible for overnight borrowing?,in,Campus_Library_Regulations_and_Services.txt,en,easy,ai_draft,Section 3: Red-labeled books overnight from 19:00 until 10:00 next business day
+Wie hoch sind die Mahngebühren in der ersten Woche nach Ablauf der Leihfrist?,in,Campus_Library_Regulations_and_Services.txt,de,easy,ai_draft,Section 3: 1.50 euro per book per week
+How much does a Bavarian inter-library loan order cost per title?,in,Campus_Library_Regulations_and_Services.txt,en,easy,ai_draft,Section 4: 1.50 euro subsidized processing fee via BVB
+How many total ECTS credits are required to graduate from the Master in Artificial Intelligence?,in,MSc_Artificial_Intelligence_Curriculum.md,en,easy,ai_draft,Section 1: Total 120 ECTS across 4 semesters
+Welche vier Kernmodule müssen im ersten und zweiten Semester absolviert werden?,in,MSc_Artificial_Intelligence_Curriculum.md,de,easy,ai_draft,"Section 2: IN2064, IN2346, IN2089, IN2155"
+How many ECTS credits is the Advanced Machine Learning module IN2064 worth?,in,MSc_Artificial_Intelligence_Curriculum.md,en,easy,ai_draft,Section 2: 8 ECTS with 120-minute written exam
+What are the formal prerequisites for taking Deep Learning & Neural Architectures IN2346?,in,MSc_Artificial_Intelligence_Curriculum.md,en,easy,ai_draft,Section 2: Linear Algebra and Python programming proficiency
+Which module covers Approximate Nearest Neighbor search and HNSW vector databases?,in,MSc_Artificial_Intelligence_Curriculum.md,en,easy,ai_draft,Section 2: IN2089 Vector Databases & Neural IR (6 ECTS)
+"What topics are examined in the AI Ethics, Safety, and EU AI Act Compliance module?",in,MSc_Artificial_Intelligence_Curriculum.md,en,easy,ai_draft,"Section 2: IN2155 covers XAI, algorithmic fairness, GDPR, and EU AI Act classification"
+What is the team size requirement for the Practical Research Lab in the AI program?,in,MSc_Artificial_Intelligence_Curriculum.md,en,easy,ai_draft,Section 3: Teams of 2 to 4 students under chair lab supervision
+What deliverables must students submit for the 10 ECTS practical research lab?,in,MSc_Artificial_Intelligence_Curriculum.md,en,easy,ai_draft,"Section 3: Production codebase, Docker deployment, test suite, and 15-page report"
+Wie viele ECTS müssen bis zum Ende des zweiten Semesters mindestens erreicht werden?,in,MSc_Artificial_Intelligence_Curriculum.md,de,easy,ai_draft,Section 4: Milestone 30 ECTS or academic consultation triggered
+How many credits must be accumulated before a student can register the Master's thesis?,in,MSc_Artificial_Intelligence_Curriculum.md,en,easy,ai_draft,Section 4: At least 60 ECTS accumulated
+Was ist die maximale Regelstudienzeit für den Master in AI bevor eine Verlängerung nötig ist?,in,MSc_Artificial_Intelligence_Curriculum.md,de,easy,ai_draft,Section 4: Maximum 6 semesters; 7th semester requires examination board approval
+Can a student substitute an external industrial Werkstudent position for the Master's thesis?,in,MSc_Artificial_Intelligence_Curriculum.md,en,easy,ai_draft,"Section 5: Cannot substitute directly, but external thesis with company allowed if professor is Erstprüfer"
+Until which date must continuing students re-register for the summer semester?,in,Semester_Ticket_and_Enrollment_Guide.md,en,easy,ai_draft,Section 1: January 15 to February 15
+Bis zu welchem Stichtag läuft die Rückmeldefrist für das Wintersemester?,in,Semester_Ticket_and_Enrollment_Guide.md,de,easy,ai_draft,Section 1: June 15 to August 15
+How much is the administrative penalty fee for paying semester fees after the deadline?,in,Semester_Ticket_and_Enrollment_Guide.md,en,easy,ai_draft,Section 1: 25.00 euro late fee
+What are the consequences of failing to pay the semester fee before the final reminder deadline?,in,Semester_Ticket_and_Enrollment_Guide.md,en,easy,ai_draft,Section 1: Automatic exmatriculation (Zwangsexmatrikulation)
+What is the total amount of the semester contribution fee?,in,Semester_Ticket_and_Enrollment_Guide.md,en,easy,ai_draft,Section 2: 85.00 euro total per semester
+Wie teilt sich der Semesterbeitrag von 85 Euro auf Studentenwerk und Solidaritätsbeitrag auf?,in,Semester_Ticket_and_Enrollment_Guide.md,de,easy,ai_draft,Section 2: 75.00 euro Studentenwerksbeitrag and 10.00 euro Solidaritätsbeitrag
+What exact text must be entered in the bank transfer reference field when paying fees?,in,Semester_Ticket_and_Enrollment_Guide.md,en,easy,ai_draft,Section 2: Reference field must state RUECK-[Student_ID_Number]-[Surname]
+During what hours on weekdays is the basic campus transit ticket valid?,in,Semester_Ticket_and_Enrollment_Guide.md,en,easy,ai_draft,Section 3: Off-peak hours 18:00 to 06:00 next morning in zones M-6
+Is the basic student ticket valid all day on weekends and Bavarian public holidays?,in,Semester_Ticket_and_Enrollment_Guide.md,en,easy,ai_draft,"Section 3: Yes, valid 24 hours on weekends and official Bavarian public holidays"
+How much does the subsidized Bavarian Student Deutschlandticket upgrade cost per month?,in,Semester_Ticket_and_Enrollment_Guide.md,en,easy,ai_draft,Section 3: 29.00 euro per month
+By what day of the month must the 29-Euro Deutschlandticket subscription be cancelled?,in,Semester_Ticket_and_Enrollment_Guide.md,en,easy,ai_draft,Section 3: Cancelled by the 10th of the calendar month
+Where are the blue Card Validation Terminals located on campus to re-validate the student card?,in,Semester_Ticket_and_Enrollment_Guide.md,en,easy,ai_draft,Section 4: Main foyer Building 01 Room 00.02.001 or Informatics building Garching-Forschungszentrum
+Which academic degree is awarded upon completing the Informatics/AI Master's program?,in,TUM_Informatik_FPSO_Exam_Regulations.md,en,easy,ai_draft,Paragraph 1: Master of Science (M.Sc.)
+Wann beginnt die reguläre Prüfungsanmeldephase im Wintersemester und im Sommersemester?,in,TUM_Informatik_FPSO_Exam_Regulations.md,de,easy,ai_draft,Paragraph 12: Starts Nov 15 (winter) and May 15 (summer)
+What is the binding deadline for exam registration on TUMonline?,in,TUM_Informatik_FPSO_Exam_Regulations.md,en,easy,ai_draft,Paragraph 12: Five weeks before end of lectures at 23:59 CET
+Up to how many days before an exam can a student withdraw without providing reasons?,in,TUM_Informatik_FPSO_Exam_Regulations.md,en,easy,ai_draft,Paragraph 12: Up to 7 calendar days before the exam date
+What happens if a registered student does not appear for an exam without an approved withdrawal?,in,TUM_Informatik_FPSO_Exam_Regulations.md,en,easy,ai_draft,Paragraph 12: Graded as 5.0 fail (nicht bestanden)
+Within what timeframe must the first retake of a failed exam be attempted?,in,TUM_Informatik_FPSO_Exam_Regulations.md,en,easy,ai_draft,Paragraph 18: Next regular exam date (usually next semester within 6 months)
+Wie viele Wiederholungsversuche gibt es maximal für Pflichtmodulprüfungen?,in,TUM_Informatik_FPSO_Exam_Regulations.md,de,easy,ai_draft,Paragraph 18: Maximum two retake attempts (insgesamt maximal zwei Wiederholungsversuche)
+Can a student switch to a different elective module after failing an elective exam?,in,TUM_Informatik_FPSO_Exam_Regulations.md,en,easy,ai_draft,Paragraph 18: Permitted to switch to another elective in the catalog
+Bis wann muss die ärztliche Untersuchung für ein Prüfungsunfähigkeitsattest spätestens stattfinden?,in,TUM_Informatik_FPSO_Exam_Regulations.md,de,easy,ai_draft,Paragraph 24: Spätestens am Tag der betreffenden Prüfung
+Within how many business days must a medical certificate be submitted to the examination office?,in,TUM_Informatik_FPSO_Exam_Regulations.md,en,easy,ai_draft,Paragraph 24: Within 3 business days after the exam date
+How many months is the regular processing time for the Master's thesis?,in,TUM_Informatik_FPSO_Exam_Regulations.md,en,easy,ai_draft,Paragraph 35: Exactly six months from official registration date
+Um wie viele Monate kann die Bearbeitungszeit der Masterarbeit maximal verlängert werden?,in,TUM_Informatik_FPSO_Exam_Regulations.md,de,easy,ai_draft,Paragraph 35: Maximum 3 months extension with approval
+In what languages may the Master's thesis be written and how long is the required colloquium?,in,TUM_Informatik_FPSO_Exam_Regulations.md,en,easy,ai_draft,Paragraph 35: English or German; mandatory 30-minute colloquium
+Till what moment at night can patrons stay inside the main reading facility from Monday to Friday?,in,Campus_Library_Regulations_and_Services.txt,en,hard,ai_draft,Section 1: Mon-Fri 08:00 - 24:00 (Midnight)
+Is bringing an opaque mug with hot tea into the silent desk zone permitted?,in,Campus_Library_Regulations_and_Services.txt,en,hard,ai_draft,Section 2: Only leak-proof transparent sealable bottles permitted; hot cups forbidden
+"If someone leaves their knapsack inside a temporary storage box past two in the morning, what is the penalty to claim it back?",in,Campus_Library_Regulations_and_Services.txt,en,hard,ai_draft,Section 2: Reset at 02:00 AM; items held for 10 euro fee
+How many printed volumes can someone take home at once under ordinary enrollment status?,in,Campus_Library_Regulations_and_Services.txt,en,hard,ai_draft,Section 3: Up to 25 physical books simultaneously
+"If a monograph is needed that our local branches lack, what is the subsidised charge to have it shipped from another Bavarian institution?",in,Campus_Library_Regulations_and_Services.txt,en,hard,ai_draft,Section 4: 1.50 euro per requested title via BVB
+How many academic credit units in total must a candidate accumulate to finish the postgraduate degree?,in,MSc_Artificial_Intelligence_Curriculum.md,en,hard,ai_draft,Section 1: Total 120 ECTS across 4 semesters
+"Which foundational subject covers Gaussian processes, empirical risk minimization, and Bayesian inference?",in,MSc_Artificial_Intelligence_Curriculum.md,en,hard,ai_draft,Section 2: IN2064 Advanced Machine Learning
+What mathematical and coding background must an attendee possess prior to taking the class on transformers and diffusion models?,in,MSc_Artificial_Intelligence_Curriculum.md,en,hard,ai_draft,Section 2: Linear Algebra and Python programming proficiency for IN2346
+How many team members collaborate together on the practical project supervised by an academic chair?,in,MSc_Artificial_Intelligence_Curriculum.md,en,hard,ai_draft,Section 3: Teams of 2 to 4 students under lab supervision
+"If an enrolled scholar has earned under thirty academic points by their first year mark, what mandatory intervention happens?",in,MSc_Artificial_Intelligence_Curriculum.md,en,hard,ai_draft,Section 4: Mandatory academic advisory consultation (Studienberatung)
+Can someone complete their final graduation dissertation at an external corporate enterprise like BMW or Siemens?,in,MSc_Artificial_Intelligence_Curriculum.md,en,hard,ai_draft,Section 5: Permitted if university professor serves as primary supervisor
+What is the absolute cut-off date to pay recurring enrollment dues for the spring and summer term?,in,Semester_Ticket_and_Enrollment_Guide.md,en,hard,ai_draft,Section 1: February 15 deadline
+"If a bank transfer arrives past the designated period, what extra surcharge is imposed?",in,Semester_Ticket_and_Enrollment_Guide.md,en,hard,ai_draft,Section 1: 25.00 euro administrative penalty fee
+What exact string syntax must appear on the wire transfer memo so the accounting office pairs the funds to the sender?,in,Semester_Ticket_and_Enrollment_Guide.md,en,hard,ai_draft,Section 2: RUECK-[Student_ID_Number]-[Surname]
+Can an enrolled scholar travel across the regional subway and bus transit network without extra payment at midday on a Wednesday?,in,Semester_Ticket_and_Enrollment_Guide.md,en,hard,ai_draft,Section 3: Off-peak only (18:00 to 06:00 on weekdays); midday is not covered
+By which calendar day must a commuter stop their recurring 29-euro monthly travel pass so it does not renew next period?,in,Semester_Ticket_and_Enrollment_Guide.md,en,hard,ai_draft,Section 3: Must be cancelled by the 10th of the calendar month
+Where do I validate my student card after paying the semester fees?,in,Semester_Ticket_and_Enrollment_Guide.md,en,hard,ai_draft,Section 4: Card Validation Terminals in Building 01 or Informatics building
+How many days ahead of an assessment session can a candidate voluntarily back out without having to show a doctor's note?,in,TUM_Informatik_FPSO_Exam_Regulations.md,en,hard,ai_draft,Paragraph 12: Up to 7 calendar days before exam date
+"If an examinee comes down with a sudden medical condition on test morning, by when must a physician examine them?",in,TUM_Informatik_FPSO_Exam_Regulations.md,en,hard,ai_draft,Paragraph 24: At the latest on the date of the respective examination
+How much time is allocated to an applicant from the formal start date to turn in their concluding graduation writeup?,in,TUM_Informatik_FPSO_Exam_Regulations.md,en,hard,ai_draft,Paragraph 35: Exactly six months
+What is the weather forecast in Munich for this weekend?,out,None,en,easy,ai_draft,Weather inquiry
+Will it rain tomorrow in Garching-Forschungszentrum?,out,None,en,easy,ai_draft,Weather inquiry
+What was the average temperature in Bavaria during July 2023?,out,None,en,easy,ai_draft,Weather inquiry
+Should I carry an umbrella to campus today?,out,None,en,easy,ai_draft,Weather inquiry
+Wie wird das Wetter morgen Vormittag in München?,out,None,de,easy,ai_draft,Weather inquiry (German)
+What is the best route to walk around the Englischer Garten on a sunny afternoon?,out,None,en,easy,ai_draft,General recreational inquiry
+What time does the sunset occur in Munich during December?,out,None,en,easy,ai_draft,General outdoor inquiry
+Is it snowing on the Alps near Garmisch-Partenkirchen right now?,out,None,en,easy,ai_draft,Regional weather inquiry
+How do I make traditional Bavarian Käsespätzle at home?,out,None,en,easy,ai_draft,Cooking recipe inquiry
+What ingredients are needed to bake authentic Munich sourdough pretzels?,out,None,en,easy,ai_draft,Cooking recipe inquiry
+Can you give me a quick recipe for gluten-free banana bread?,out,None,en,easy,ai_draft,Cooking recipe inquiry
+How do you prepare Wiener Schnitzel with potato salad?,out,None,en,easy,ai_draft,Cooking recipe inquiry
+Welche Zutaten brauche ich für eine bayerische Kartoffelsuppe?,out,None,de,easy,ai_draft,Cooking recipe inquiry (German)
+What is the secret to getting crispy roasted pork knuckle (Schweinshaxe)?,out,None,en,easy,ai_draft,Cooking recipe inquiry
+Who won the 2024 UEFA Champions League football final?,out,None,en,easy,ai_draft,Sports inquiry
+What was the capital of the Roman Empire during the reign of Augustus?,out,None,en,easy,ai_draft,History inquiry
+How many kilometers is the distance between Munich and Berlin by train?,out,None,en,easy,ai_draft,Geography inquiry
+Who wrote the novel Faust?,out,None,en,easy,ai_draft,Literature inquiry
+Welcher Fußballverein hat die meisten Bundesliga-Titel gewonnen?,out,None,de,easy,ai_draft,Sports inquiry (German)
+What is the current population of the European Union?,out,None,en,easy,ai_draft,General demographics inquiry
+Can you implement a red-black tree data structure in C++?,out,None,en,easy,ai_draft,Generic software engineering request
+How do I invert a binary matrix using NumPy in Python?,out,None,en,easy,ai_draft,Generic programming coding question
+Explain the mathematical proof of Fermat's Last Theorem.,out,None,en,easy,ai_draft,Pure mathematics inquiry
+Write a Python script that scrapes headlines from a news website.,out,None,en,easy,ai_draft,Generic web scraping coding task
+What are the daily lunch specials at the Garching Mensa today?,out,None,en,hard,ai_draft,Campus-adjacent: Mensa menu not in docs
+How much does a student parking permit cost in the campus underground garage?,out,None,en,hard,ai_draft,Campus-adjacent: Parking permits not in docs
+What is the weekly fitness schedule for student yoga at the ZHS university sports center?,out,None,en,hard,ai_draft,Campus-adjacent: University sports not in docs
+What is the monthly rent for a single apartment in the Studentenstadt student dormitories?,out,None,en,hard,ai_draft,Campus-adjacent: Student housing rents not in docs
+Which tech companies are attending the university IKOM career fair this year?,out,None,en,hard,ai_draft,Campus-adjacent: Career fairs not in docs
+What is the monthly net salary for a PhD student hired on a TV-L E13 contract?,out,None,en,hard,ai_draft,Campus-adjacent: Employment compensation not in docs
+How do student parents register for the university daycare center Kinderkrippe?,out,None,en,hard,ai_draft,Campus-adjacent: Childcare services not in docs
+Wo kann ich mein Fahrrad auf dem Campus reparieren lassen?,out,None,de,hard,ai_draft,Campus-adjacent: Bike repair shop not in docs (German)
+What is the minimum grade requirement to pass the Bachelor in Mechanical Engineering?,out,None,en,hard,ai_draft,Tricky near-miss: Mechanical Engineering BSc not in docs
+Can I cross-register for undergraduate humanities classes at LMU Munich?,out,None,en,hard,ai_draft,Tricky near-miss: LMU cross-registration not in docs
+How much is the consular fee to extend a student residence permit at the Munich KVR Ausländerbehörde?,out,None,en,hard,ai_draft,Tricky near-miss: City immigration fees not in docs
+What textbooks are assigned for module IN0001 Introduction to Informatics 1?,out,None,en,hard,ai_draft,Tricky near-miss: Bachelor introductory course not in docs
+How do I submit an application for the Deutschlandstipendium merit scholarship?,out,None,en,hard,ai_draft,Tricky near-miss: Merit scholarships not in docs
+What are the formal graduation requirements for the PhD program in Quantum Computing?,out,None,en,hard,ai_draft,Tricky near-miss: Doctoral degree guidelines not in docs
+Kann ich mir Prüfungsleistungen aus einem Jurastudium für das Informatik-Masterstudium anrechnen lassen?,out,None,de,hard,ai_draft,Tricky near-miss: Law degree transfer credits not in docs (German)
+What is the deadline for submitting Master's theses in the Chemistry and Chemical Engineering department?,out,None,en,hard,ai_draft,Tricky near-miss: Chemistry department thesis deadlines not in docs
+is water allowed in the main bib reading room?,in,Campus_Library_Regulations_and_Services.txt,en,easy,human,Student phrasing: bib abbreviation and casual grammar
+darf man im lesesaal der bib kaffee trinken?,in,Campus_Library_Regulations_and_Services.txt,de,easy,human,German student query: coffee allowed in library reading room
+how many books can i take out at once from the library?,in,Campus_Library_Regulations_and_Services.txt,en,easy,human,Borrowing limit query in casual tone
+mahngebuehren bibliothek wenn man buch zu spaet abgibt?,in,Campus_Library_Regulations_and_Services.txt,de,easy,human,Half-sentence German query regarding overdue fines
+how many ects do i need before registering master thesis?,in,MSc_Artificial_Intelligence_Curriculum.md,en,easy,human,Casual curriculum question: ECTS threshold for thesis
+is machine learning IN2064 mandatory in first sem?,in,MSc_Artificial_Intelligence_Curriculum.md,en,easy,human,Abbreviated semester query on core requirements
+kann man die masterarbeit extern in einer firma schreiben?,in,MSc_Artificial_Intelligence_Curriculum.md,de,hard,human,German practical question on industrial thesis
+prerequisites for deep learning course in2346?,in,MSc_Artificial_Intelligence_Curriculum.md,en,easy,human,Short course prerequisites question
+rueckmeldefrist sommersemester deadline?,in,Semester_Ticket_and_Enrollment_Guide.md,de,easy,human,German-English hybrid query on re-registration window
+what happens if i miss the semester fee payment deadline?,in,Semester_Ticket_and_Enrollment_Guide.md,en,easy,human,Consequences of late semester contribution
+does basic student transit ticket cover s-bahn on weekends?,in,Semester_Ticket_and_Enrollment_Guide.md,en,hard,human,Transit validity on weekends for student pass
+deutschlandticket upgrade 29 euro kuendigungsfrist?,in,Semester_Ticket_and_Enrollment_Guide.md,de,hard,human,Cancellation cutoff query for 29 Euro ticket
+bis wann muss attest nach verpasster pruefung abgegeben werden?,in,TUM_Informatik_FPSO_Exam_Regulations.md,de,easy,human,Exam attest deadline in German
+how many retake attempts do i have for failed exam?,in,TUM_Informatik_FPSO_Exam_Regulations.md,en,easy,human,Exam repetition policy inquiry
+wie viele ects sind eine masterarbeit laut fpso?,in,TUM_Informatik_FPSO_Exam_Regulations.md,de,easy,human,Short German query about master thesis ECTS weight
+can you write a cover letter for a python working student job?,out,None,en,easy,human,Generic job application writing request
+how do i implement dijkstra algorithm in rust?,out,None,en,easy,human,Coding and algorithm implementation question
+empfiehl mir ein gutes italienisches restaurant in der innenstadt,out,None,de,easy,human,Generic dining recommendation outside campus knowledge domain
+mensa garching oeffnungszeiten und speiseplan heute?,out,None,de,hard,human,Campus-adjacent: cafeteria menus not covered by docs
+how do i apply for a student dorm room in studentenstadt?,out,None,en,hard,human,Campus-adjacent: Studentenwerk housing not in docs
+where is the lost and found office on main campus?,out,None,en,hard,human,Campus-adjacent: lost property office not in docs
+tum sports center zhs gym registration cost?,out,None,en,hard,human,Campus-adjacent: ZHS university sports not in docs
+wie beantragt man ein urlaubssemester wegen krankheit?,out,None,de,hard,human,Leave of absence process not documented in provided texts
+can bachelor mechanical engineering credits count towards masters ai?,out,None,en,hard,human,External department credit transfer not in docs
+prof office hours for algorithms chair in garching?,out,None,en,hard,human,Specific chair contact info not in docs
+how to print lecture slides at the student council rechnerecho?,out,None,en,hard,human,Student council printing service not in docs
+wo ist die fachschaft informatik im mathematik gebaeude?,out,None,de,hard,human,Student representative office directions not in docs
+hiwi job hourly pay rate for master students?,out,None,en,hard,human,Student assistant wage tables not in docs
+wo kann man campus card aufladen fuer kaffeeautomat?,out,None,de,hard,human,CampusCard cash loader machines not in docs
+grade appeal process after exam review Einsichtnahme?,out,None,en,hard,human,Formal legal grade contestation procedure not in docs

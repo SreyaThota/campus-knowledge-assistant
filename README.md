@@ -164,33 +164,74 @@ A fine-grained threshold sweep evaluated on the validation split across the thre
 
 *Decision Surface Finding:* The measurement reveals that the decision surface is **not** a steep cliff with volatile swings. Instead, between $\tau = 0.25$ and $\tau = 0.40$, $F_1$ forms a forgiving plateau ($0.720\text{--}0.726$). Across this entire range, recall shifts by only 3.0 percentage points ($66.0\% \to 63.0\%$) and in-scope acceptance remains stable ($99.43\% \to 99.60\%$). Over the wider 0.30 span ($\tau = 0.20 \to 0.50$), recall shifts by only 6.7 points ($66.3\% \to 59.7\%$) while false rejections drop from 18.7 to 11.0.
 
-#### CLINC Test Split Benchmark (Held-Out Final Evaluation)
-- **Status:** TBD after campus freeze (Evaluated once with thresholds fixed from validation; no re-tuning on test).
+#### CLINC Test Split Benchmark (Held-Out Final Evaluation, $N = 5{,}500$)
+> Evaluated on the held-out CLINC150 test split ($4{,}500$ in-scope, $1{,}000$ out-of-scope) with decision thresholds frozen from validation. Zero re-tuning on test data.
+>
+> **Definition:** *False rejections*: In-scope test queries wrongly refused by the gate.
 
-#### Campus Evaluation Set Benchmark (Zero-Shot Domain Transfer)
-- **Status:** TBD after campus freeze.
-- **Breakdown by Author (`human` vs `ai_draft`):** TBD after campus freeze.
-- **Breakdown by Difficulty (`easy` vs `hard`):** TBD after campus freeze.
-- **Breakdown by Language (`en` vs `de`):** TBD after campus freeze.
+| Method | Frozen Threshold ($\tau$) | OOS $F_1$ [95% CI] | OOS Recall [95% CI] | OOS Precision [95% CI] | In-Scope Acceptance [95% CI] | False Rejections (FP / 4,500) | ECE |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **TF-IDF + Logistic Regression** | 0.5725 | 0.4129 [0.3793, 0.4458] | 0.2760 [0.2483, 0.3043] | 0.8190 [0.7768, 0.8584] | 0.9864 [0.9830, 0.9898] | 61 | 0.0309 |
+| **Centroid Cosine Similarity** | 0.8918 | 0.4219 [0.3922, 0.4527] | 0.3320 [0.3052, 0.3604] | 0.5784 [0.5401, 0.6184] | 0.9462 [0.9399, 0.9526] | 242 | 0.5488 |
+| **Exemplar Cosine (Nearest Neighbor)** | 0.5504 | **0.6230 [0.5940, 0.6514]** | **0.4710 [0.4410, 0.5020]** | 0.9199 [0.8959, 0.9439] | 0.9909 [0.9881, 0.9936] | 41 | 0.1458 |
+| **Frozen Embedding + Logistic Regression** | 0.8598 | 0.4530 [0.4206, 0.4853] | 0.3060 [0.2782, 0.3344] | 0.8718 [0.8352, 0.9066] | 0.9900 [0.9869, 0.9929] | 45 | 0.0562 |
+| **Learned Scope Gate (Seed 42)** | 0.3858 | 0.5402 [0.5085, 0.5718] | 0.3760 [0.3461, 0.4065] | 0.9592 [0.9393, 0.9757] | 0.9964 [0.9947, 0.9980] | 16 | 0.1100 |
+| **Learned Scope Gate (Seed 1337)** | 0.3072 | 0.5300 [0.4968, 0.5619] | 0.3710 [0.3402, 0.4014] | 0.9275 [0.9015, 0.9516] | 0.9936 [0.9912, 0.9956] | 29 | 0.1125 |
+| **Learned Scope Gate (Seed 2026)** | 0.3219 | 0.5780 [0.5474, 0.6088] | 0.4170 [0.3870, 0.4484] | 0.9413 [0.9202, 0.9614] | 0.9942 [0.9921, 0.9962] | 26 | 0.1045 |
+| **Learned Scope Gate (Mean ± Std)** | **—** | **0.5494 ± 0.0206** | **0.3880 ± 0.0206** | **0.9427 ± 0.0130** | **0.9947 ± 0.0012** | **23.7 ± 5.7** | **0.1090 ± 0.0034** |
+
+#### Campus Evaluation Set Benchmark (Zero-Shot Domain Transfer, $N = 140$)
+> Frozen evaluation set ($85$ in-scope, $55$ out-of-scope; SHA-256 `69fb89da...`). Combines 110 baseline queries with 30 realistic student queries.
+
+| Method | OOS $F_1$ [95% CI] | OOS Recall [95% CI] | OOS Precision [95% CI] | In-Scope Acceptance [95% CI] | False Rejections (FP / 85) | ECE |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **TF-IDF + Logistic Regression** | 0.3820 [0.2500, 0.5000] | 0.3091 [0.1875, 0.4311] | 0.5000 [0.3413, 0.6774] | 0.8000 [0.7143, 0.8877] | 17 | 0.2314 |
+| **Centroid Cosine Similarity** | 0.3540 [0.2407, 0.4629] | 0.3636 [0.2391, 0.4920] | 0.3448 [0.2308, 0.4590] | 0.5529 [0.4444, 0.6506] | 38 | 0.4685 |
+| **Exemplar Cosine (Nearest Neighbor)** | 0.4462 [0.3306, 0.5442] | **0.5273 [0.3888, 0.6471]** | 0.3867 [0.2812, 0.4940] | 0.4588 [0.3552, 0.5658] | 46 | 0.2241 |
+| **Frozen Embedding + Logistic Regression** | 0.2759 [0.1579, 0.3956] | 0.2182 [0.1186, 0.3274] | 0.3750 [0.2222, 0.5600] | 0.7647 [0.6738, 0.8534] | 20 | 0.3143 |
+| **Learned Scope Gate (Seed 42)** | 0.4643 [0.3434, 0.5737] | 0.4727 [0.3386, 0.6000] | 0.4561 [0.3333, 0.5910] | 0.6353 [0.5352, 0.7363] | 31 | 0.3622 |
+| **Learned Scope Gate (Seed 1337)** | 0.4779 [0.3542, 0.5882] | 0.4909 [0.3509, 0.6182] | 0.4655 [0.3454, 0.5965] | 0.6353 [0.5333, 0.7403] | 31 | 0.3459 |
+| **Learned Scope Gate (Seed 2026)** | **0.4915 [0.3784, 0.5968]** | **0.5273 [0.3953, 0.6508]** | 0.4603 [0.3448, 0.5834] | 0.6000 [0.4999, 0.7011] | 34 | 0.3379 |
+| **Learned Scope Gate (Mean ± Std)** | **0.4779 ± 0.0111** | **0.4970 ± 0.0227** | **0.4606 ± 0.0038** | **0.6235 ± 0.0166** | **32.0 ± 1.4** | **0.3487 ± 0.0101** |
+
+##### Campus Breakdown by Author (`human` vs `ai_draft`)
+- **Human Queries ($N = 30$: 15 In, 15 Out):**
+  - *Exemplar Cosine:* $F_1 = 0.5556$, Recall = $0.6667$, Precision = $0.4762$, In-Scope Acceptance = $0.2667$ (11 false rejections out of 15 valid questions!).
+  - *Learned Gate (Mean):* $F_1 = 0.5495 \pm 0.0155$, Recall = $0.4889$, Precision = **$0.6294$**, In-Scope Acceptance = **$0.7111$** (only 4 false rejections out of 15).
+- **AI Draft Queries ($N = 110$: 70 In, 40 Out):**
+  - *Exemplar Cosine:* $F_1 = 0.4043$, Recall = $0.4750$, Precision = $0.3519$, In-Scope Acceptance = $0.5000$ (35 false rejections out of 70).
+  - *Learned Gate (Mean):* $F_1 = 0.4561 \pm 0.0105$, Recall = $0.5000$, Precision = **$0.4195$**, In-Scope Acceptance = **$0.6048$** (28 false rejections out of 70).
+
+##### Campus Breakdown by Language (`en` vs `de`)
+- **English Subset ($N = 109$: 64 In, 45 Out):**
+  - *Exemplar Cosine:* $F_1 = 0.4396$, Recall = $0.4444$, Precision = $0.4348$, In-Scope Acceptance = $0.5938$.
+  - *Learned Gate (Mean):* $F_1 = \mathbf{0.4802}$, Recall = $\mathbf{0.5037}$, Precision = $\mathbf{0.4598}$, In-Scope Acceptance = $0.5833$.
+- **German Subset ($N = 31$: 21 In, 10 Out):**
+  - *TF-IDF + LogReg:* $F_1 = 0.0000$ (complete vocabulary mismatch, 0% recall).
+  - *Exemplar Cosine:* $F_1 = 0.4615$, Recall = $0.9000$, Precision = $0.3103$, In-Scope Acceptance = **$0.0476$** (catastrophic refusal: rejected 20 out of 21 German campus queries).
+  - *Learned Gate (Seed 2026):* $F_1 = \mathbf{0.5000}$, Recall = $0.5000$, Precision = $\mathbf{0.5000}$, In-Scope Acceptance = $\mathbf{0.7619}$ (only 5 false rejections out of 21).
+
+##### Campus Breakdown by Difficulty (`easy` vs `hard`)
+- **Easy Subset ($N = 89$: 62 In, 27 Out):**
+  - *Exemplar Cosine:* $F_1 = 0.3377$, Recall = $0.4815$, In-Scope Acceptance = $0.4032$.
+  - *Learned Gate (Mean):* $F_1 = \mathbf{0.3852}$, Recall = $0.4444$, In-Scope Acceptance = $\mathbf{0.6237}$.
+- **Hard Borderline Subset ($N = 51$: 23 In, 28 Out):**
+  - *Exemplar Cosine:* $F_1 = 0.6038$, Recall = $0.5714$, Precision = $0.6400$, In-Scope Acceptance = $0.6087$.
+  - *Learned Gate (Seed 2026):* $F_1 = \mathbf{0.6296}$, Recall = $\mathbf{0.6071}$, Precision = $\mathbf{0.6538}$, In-Scope Acceptance = $0.6087$.
 
 ### What Did Not Work
-1. **Centroid Cosine Similarity ($F_1 = 0.3544$):** Averaging in-scope training embeddings into a single centroid collapsed multimodal intent clusters. Achieving 59% OOS recall required an extreme threshold ($\tau = 0.8918$) that caused 174 false rejections on in-scope queries (precision fell to 25.3%).
-2. **Frozen Embeddings + Logistic Regression ($F_1 = 0.4878$):** Fitting a linear classifier on top of frozen sentence embeddings struggled under severe class imbalance (~60:1), trailing nearest-neighbor exemplar retrieval ($0.6224$) and end-to-end fine-tuning ($0.7356$).
-3. **Unweighted CrossEntropyLoss:** In early experiments, unweighted loss caused the classifier to collapse entirely to the majority in-scope class, producing 0% recall on out-of-scope queries.
+1. **Nearest-Neighbor Baseline Won on the Held-Out Test Split ($F_1 = 0.6230$ vs $0.5494$):** On the true held-out CLINC test split ($N = 5{,}500$), the Exemplar Cosine Nearest Neighbor baseline outperformed the Learned Scope Gate by +7.36 $F_1$ points. The fine-tuned transformer model suffered a substantial generalization drop from validation ($0.7356 \to 0.5494$) due to conservative OOS recall ($38.8\%$ on test vs $65.3\%$ on validation), while Exemplar Cosine remained rock-solid ($0.6224 \to 0.6230$).
+2. **Severe In-Scope Rejection Under Zero-Shot Campus Domain Shift:** When transferred zero-shot to campus queries, in-scope acceptance collapsed from $99.5\%$ down to $62.35\%$ for the Learned Gate (32 false rejections out of 85) and down to $45.88\%$ for Exemplar Cosine (46 false rejections out of 85). Unseen campus terminology ("FPSO", "ECTS", "Semesterbeitrag") caused the gates to mistakenly classify valid in-scope questions as out-of-scope.
+3. **Catastrophic Failure of Exemplar Cosine on German Campus Queries:** Exemplar Cosine rejected 20 out of 21 legitimate German in-scope queries ($4.76\%$ acceptance), because its nearest-neighbor index only contains English CLINC training sentences. The Learned Gate fared significantly better ($76.2\%$ acceptance) due to multilingual subword representations in MiniLM.
+4. **Centroid Cosine Similarity ($F_1 = 0.4219$ test, $0.3540$ campus):** Collapsing in-scope training embeddings into a single centroid caused 242 false rejections on test and 38 on campus, confirming that a single mean vector cannot represent multi-intent domains.
+5. **Frozen Embeddings + Logistic Regression ($F_1 = 0.4530$ test):** Fitting a linear classifier on frozen embeddings trailed nearest neighbors on test ($0.4530$ vs $0.6230$), demonstrating poor linear separability under 60:1 training class imbalance.
 
 ### Limits
-1. **Validation Split Granularity & Dual-Use:** The validation split contains only 100 out-of-scope (OOS) queries ($N = 3{,}100$: 3,000 in-scope, 100 OOS). Consequently, a single misclassified query moves recall by an entire 1.0 percentage point. Furthermore, this exact split was used for both threshold selection ($\tau$) and architecture comparison, introducing an inherent risk of optimistic selection bias.
-2. **Bootstrap 95% Confidence Intervals & 11-Point Gap:** While the Learned Gate point-estimate mean $F_1$ leads the Exemplar Cosine baseline by $\approx +11.3$ points ($0.7356$ vs $0.6224 / 0.6154$), non-parametric bootstrap resampling ($B = 1{,}000$) reveals overlapping 95% confidence intervals due to the small validation sample:
-   - *Exemplar Cosine ($\tau = 0.5504$):* $F_1 \in [0.5301, 0.6909]$, Recall $\in [0.5000, 0.6939]$
-   - *Learned Gate Seed 42 ($\tau = 0.3858$):* $F_1 \in [0.6667, 0.8114]$, Recall $\in [0.5607, 0.7411]$
-   - *Learned Gate Seed 1337 ($\tau = 0.3072$):* $F_1 \in [0.6667, 0.8093]$, Recall $\in [0.5700, 0.7525]$
-   - *Learned Gate Seed 2026 ($\tau = 0.3219$):* $F_1 \in [0.6437, 0.7919]$, Recall $\in [0.5565, 0.7383]$
-   Because the upper bound of the Exemplar Cosine CI ($0.6909$) overlaps the lower bounds of the Learned Gate models ($0.6437\text{--}0.6667$), the 11-point gap cannot be established as statistically non-overlapping on validation alone; conclusive verification requires the 1,000 OOS queries of the held-out test split.
-3. **Validation-Only Numbers:** Current quantitative comparisons reflect the validation split only. Generalization to unseen test distributions and zero-shot campus transfer is unproven until final evaluation on frozen test data.
-4. **Synthetic vs Authentic Student Query Distribution:** CLINC150 queries are full, grammatically structured sentences. Actual campus queries frequently exhibit non-standard abbreviations ("bib", "ects", "fpso"), typos, half-sentences, and code-switching (mixed German-English).
-5. **Cross-Lingual Transfer:** The underlying encoder (`all-MiniLM-L6-v2`) and the training set are English-focused. German query performance is experimental and uncalibrated until validated on the campus set.
-6. **Leakage Verification Bounds:** The split integrity check only filters exact lowercase string matches; semantic near-duplicates are not caught by this check.
-7. **Campus Set Sample Size:** The campus evaluation set ($N \approx 110\text{--}140$) provides directional sanity checking rather than statistically powered proof ($\pm 12\text{--}15\%$ margin of error on small subsets).
+1. **Validation-to-Test Generalization Gap:** The ~11-point validation lead of the Learned Gate did not hold on the held-out test split. The small validation sample ($100$ OOS queries) led to an overly conservative decision threshold ($\tau \approx 0.34$) that produced high precision ($94.3\%$) but depressed test recall ($38.8\%$).
+2. **Campus In-Scope False Refusal Risk:** In a production campus assistant, a scope gate trained strictly on general conversational intents cannot safely accept domain-specific campus jargon without in-domain calibration; 37.6% of valid campus questions were wrongly refused by the gate before reaching the RAG pipeline.
+3. **Synthetic vs Authentic Student Query Distribution:** Real student queries exhibit typos, half-sentences, and heavy abbreviations that degrade embedding similarity against standard English training corpora.
+4. **Cross-Lingual Degradation:** While the Learned Gate demonstrated partial cross-lingual transfer on German queries ($F_1 = 0.5000$), performance remains uncalibrated compared to English ($F_1 = 0.4802$), and classical lexical baselines (TF-IDF) fail completely ($F_1 = 0.0000$).
+5. **Split Integrity Limits:** The split check verifies exact lowercase query matches; semantic near-duplicates and paraphrases across splits are not caught.
 
 ### How to Reproduce
 1. **Verify Split Disjointness:**

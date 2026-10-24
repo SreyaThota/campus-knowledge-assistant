@@ -45,6 +45,8 @@ backend/data/
 # Model Checkpoints & Artifacts
 checkpoints/
 results/checkpoints/
+results/*_predictions.json
+results/diagrams/
 *.pt
 *.bin
 data/cache/

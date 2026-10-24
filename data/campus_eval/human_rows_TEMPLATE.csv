@@ -1,31 +1,31 @@
 question,label,source_doc,lang,difficulty,author,notes
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
-,,,,,,human,
+is water allowed in the main bib reading room?,in,Campus_Library_Regulations_and_Services.txt,en,easy,human,Student phrasing: bib abbreviation and casual grammar
+darf man im lesesaal der bib kaffee trinken?,in,Campus_Library_Regulations_and_Services.txt,de,easy,human,German student query: coffee allowed in library reading room
+how many books can i take out at once from the library?,in,Campus_Library_Regulations_and_Services.txt,en,easy,human,Borrowing limit query in casual tone
+mahngebuehren bibliothek wenn man buch zu spaet abgibt?,in,Campus_Library_Regulations_and_Services.txt,de,easy,human,Half-sentence German query regarding overdue fines
+how many ects do i need before registering master thesis?,in,MSc_Artificial_Intelligence_Curriculum.md,en,easy,human,Casual curriculum question: ECTS threshold for thesis
+is machine learning IN2064 mandatory in first sem?,in,MSc_Artificial_Intelligence_Curriculum.md,en,easy,human,Abbreviated semester query on core requirements
+kann man die masterarbeit extern in einer firma schreiben?,in,MSc_Artificial_Intelligence_Curriculum.md,de,hard,human,German practical question on industrial thesis
+prerequisites for deep learning course in2346?,in,MSc_Artificial_Intelligence_Curriculum.md,en,easy,human,Short course prerequisites question
+rueckmeldefrist sommersemester deadline?,in,Semester_Ticket_and_Enrollment_Guide.md,de,easy,human,German-English hybrid query on re-registration window
+what happens if i miss the semester fee payment deadline?,in,Semester_Ticket_and_Enrollment_Guide.md,en,easy,human,Consequences of late semester contribution
+does basic student transit ticket cover s-bahn on weekends?,in,Semester_Ticket_and_Enrollment_Guide.md,en,hard,human,Transit validity on weekends for student pass
+deutschlandticket upgrade 29 euro kuendigungsfrist?,in,Semester_Ticket_and_Enrollment_Guide.md,de,hard,human,Cancellation cutoff query for 29 Euro ticket
+bis wann muss attest nach verpasster pruefung abgegeben werden?,in,TUM_Informatik_FPSO_Exam_Regulations.md,de,easy,human,Exam attest deadline in German
+how many retake attempts do i have for failed exam?,in,TUM_Informatik_FPSO_Exam_Regulations.md,en,easy,human,Exam repetition policy inquiry
+wie viele ects sind eine masterarbeit laut fpso?,in,TUM_Informatik_FPSO_Exam_Regulations.md,de,easy,human,Short German query about master thesis ECTS weight
+can you write a cover letter for a python working student job?,out,None,en,easy,human,Generic job application writing request
+how do i implement dijkstra algorithm in rust?,out,None,en,easy,human,Coding and algorithm implementation question
+empfiehl mir ein gutes italienisches restaurant in der innenstadt,out,None,de,easy,human,Generic dining recommendation outside campus knowledge domain
+mensa garching oeffnungszeiten und speiseplan heute?,out,None,de,hard,human,Campus-adjacent: cafeteria menus not covered by docs
+how do i apply for a student dorm room in studentenstadt?,out,None,en,hard,human,Campus-adjacent: Studentenwerk housing not in docs
+where is the lost and found office on main campus?,out,None,en,hard,human,Campus-adjacent: lost property office not in docs
+tum sports center zhs gym registration cost?,out,None,en,hard,human,Campus-adjacent: ZHS university sports not in docs
+wie beantragt man ein urlaubssemester wegen krankheit?,out,None,de,hard,human,Leave of absence process not documented in provided texts
+can bachelor mechanical engineering credits count towards masters ai?,out,None,en,hard,human,External department credit transfer not in docs
+prof office hours for algorithms chair in garching?,out,None,en,hard,human,Specific chair contact info not in docs
+how to print lecture slides at the student council rechnerecho?,out,None,en,hard,human,Student council printing service not in docs
+wo ist die fachschaft informatik im mathematik gebaeude?,out,None,de,hard,human,Student representative office directions not in docs
+hiwi job hourly pay rate for master students?,out,None,en,hard,human,Student assistant wage tables not in docs
+wo kann man campus card aufladen fuer kaffeeautomat?,out,None,de,hard,human,CampusCard cash loader machines not in docs
+grade appeal process after exam review Einsichtnahme?,out,None,en,hard,human,Formal legal grade contestation procedure not in docs
