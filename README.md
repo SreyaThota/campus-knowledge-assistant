@@ -109,6 +109,85 @@ flowchart TD
 
 ---
 
+## 🛡️ Learned Scope Gate Evaluation
+
+### What Was Built
+- **Task Definition:** Binary classification gate to detect Out-of-Scope (OOS) queries before retrieval:
+  - Label 1: In-scope query (admissible to retrieval pipeline)
+  - Label 0: Out-of-scope query (early refusal without LLM generation)
+- **Model Architecture:** Custom PyTorch classifier built on `sentence-transformers/all-MiniLM-L6-v2` backbone (22.7M parameters) with mean token pooling, dropout ($p = 0.2$), and a linear classification head ($384 \to 2$).
+- **Optimization:** Hand-written training loop (`gate/train.py`) utilizing AdamW (learning rate = $3\times 10^{-5}$, weight decay = $0.01$), linear warmup schedule (10% steps), gradient clipping ($\text{max\_norm} = 1.0$), and class-weighted CrossEntropyLoss ($w_{\text{oos}} \approx 31.1$, $w_{\text{in}} \approx 0.51$) to counteract ~60:1 training class imbalance.
+- **Reproducibility:** 3 fixed random seeds (42, 1337, 2026) logged to MLflow (`mlruns/`).
+- **Baselines Implemented:**
+  1. TF-IDF + class-weighted Logistic Regression
+  2. Centroid Cosine Similarity
+  3. Exemplar Cosine Similarity (Nearest Neighbor)
+  4. Frozen `all-MiniLM-L6-v2` Embeddings + class-weighted Logistic Regression
+- **Decision Boundary:** All decision thresholds ($\tau$) are selected strictly on the validation split ($\tau \in [0.01, 0.99]$) using the maximum OOS $F_1$ criterion.
+
+### Dataset Split Integrity & Leakage Verification
+- **Verification Protocol:** Implemented in `gate/data.py` (`load_clinc_data(dedup_leaks=True)` and `assert_splits_disjoint()`).
+- **What is Compared:** Query strings normalized via stripped lowercase representation (`text.strip().lower()`). The set intersection of normalized queries across the training, validation, and test splits is evaluated.
+- **What the Check Found:** In the raw CLINC150 dataset (`clinc_oos`, `plus`), exactly 5 query strings in the raw training split ($N = 15{,}250$) were identical duplicates of validation or test split queries. Deduplication removed these 5 leaked examples, yielding an official training split of $N = 15{,}245$. The disjointness check confirmed that $\text{train} \cap \text{val} = \emptyset$, $\text{train} \cap \text{test} = \emptyset$, and $\text{val} \cap \text{test} = \emptyset$.
+- **Known Limitation:** The split verification check only compares exact lowercase string matches. It does not check for fuzzy string similarity, token edit distance, or semantic near-duplicates (e.g., slight paraphrases, synonym substitutions, or punctuation variations).
+
+### Results Table
+
+#### Validation Split Benchmark (VALIDATION ONLY - Tuning Set)
+> All numbers below are from `results/val_comparison.md`, evaluated on the CLINC150 validation split ($N = 3{,}100$: $3{,}000$ in-scope, $100$ out-of-scope). Decision thresholds were chosen on this split. These are **not** test numbers.
+
+| Method | Tuned Threshold ($\tau_{\text{val}}$) | OOS $F_1$ | OOS Recall | OOS Precision | In-Scope Acceptance |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **TF-IDF + Logistic Regression** | 0.5725 | 0.4946 | 0.4600 | 0.5349 | 0.9867 |
+| **Centroid Cosine Similarity** | 0.8918 | 0.3544 | 0.5900 | 0.2532 | 0.9420 |
+| **Exemplar Cosine Similarity (Nearest Neighbor)** | 0.5504 | 0.6224 | 0.6100 | 0.6354 | 0.9883 |
+| **Frozen Embedding + Logistic Regression** | 0.8819 | 0.4878 | 0.4000 | 0.6250 | 0.9920 |
+| **Learned Scope Gate (Seed 42)** | 0.3858 | 0.7429 | 0.6500 | 0.8667 | 0.9967 |
+| **Learned Scope Gate (Seed 1337)** | 0.3072 | 0.7416 | 0.6600 | 0.8462 | 0.9960 |
+| **Learned Scope Gate (Seed 2026)** | 0.3219 | 0.7222 | 0.6500 | 0.8125 | 0.9950 |
+| **Learned Scope Gate (Mean ± Std across 3 seeds)** | **0.3383 ± 0.0341** | **0.7356 ± 0.0094** | **0.6533 ± 0.0047** | **0.8418 ± 0.0223** | **0.9959 ± 0.0007** |
+
+#### CLINC Test Split Benchmark (Held-Out Final Evaluation)
+- **Status:** TBD after campus freeze (Evaluated once with thresholds fixed from validation; no re-tuning on test).
+
+#### Campus Evaluation Set Benchmark (Zero-Shot Domain Transfer)
+- **Status:** TBD after campus freeze.
+- **Breakdown by Author (`human` vs `ai_draft`):** TBD after campus freeze.
+- **Breakdown by Difficulty (`easy` vs `hard`):** TBD after campus freeze.
+- **Breakdown by Language (`en` vs `de`):** TBD after campus freeze.
+
+### What Did Not Work
+1. **Centroid Cosine Similarity ($F_1 = 0.3544$):** Averaging in-scope training embeddings into a single centroid collapsed multimodal intent clusters. Achieving 59% OOS recall required an extreme threshold ($\tau = 0.8918$) that caused 174 false rejections on in-scope queries (precision fell to 25.3%).
+2. **Frozen Embeddings + Logistic Regression ($F_1 = 0.4878$):** Fitting a linear classifier on top of frozen sentence embeddings struggled under severe class imbalance (~60:1), trailing nearest-neighbor exemplar retrieval ($0.6224$) and end-to-end fine-tuning ($0.7356$).
+3. **Unweighted CrossEntropyLoss:** In early experiments, unweighted loss caused the classifier to collapse entirely to the majority in-scope class, producing 0% recall on out-of-scope queries.
+
+### Limits
+1. **Validation-Only Numbers:** Current quantitative comparisons reflect the validation split only. Generalization to unseen test distributions and zero-shot campus transfer is unproven until final evaluation on frozen test data.
+2. **Synthetic vs Authentic Student Query Distribution:** CLINC150 queries are full, grammatically structured sentences. Actual campus queries frequently exhibit non-standard abbreviations ("bib", "ects", "fpso"), typos, half-sentences, and code-switching (mixed German-English).
+3. **Cross-Lingual Transfer:** The underlying encoder (`all-MiniLM-L6-v2`) and the training set are English-focused. German query performance is experimental and uncalibrated until validated on the campus set.
+4. **Leakage Verification Bounds:** The split integrity check only filters exact lowercase string matches; semantic near-duplicates are not caught by this check.
+5. **Campus Set Sample Size:** The campus evaluation set ($N \approx 110\text{--}140$) provides directional sanity checking rather than statistically powered proof ($\pm 12\text{--}15\%$ margin of error on small subsets).
+
+### How to Reproduce
+1. **Verify Split Disjointness:**
+   ```bash
+   pytest tests/test_gate_data.py -v
+   ```
+2. **Run Validation Baseline Benchmark:**
+   ```bash
+   python scripts/run_val_comparison.py
+   ```
+3. **Run Offline Evaluation Test Suite:**
+   ```bash
+   pytest tests/test_gate_evaluate.py -v
+   ```
+4. **Inspect MLflow Experiment Dashboard:**
+   ```bash
+   mlflow ui --backend-store-uri mlruns --port 5000
+   ```
+
+---
+
 ## 📁 Repository Structure
 
 ```

@@ -48,6 +48,8 @@ results/checkpoints/
 *.pt
 *.bin
 data/cache/
+mlruns/
+.trash/
 
 # IDEs
 .idea/

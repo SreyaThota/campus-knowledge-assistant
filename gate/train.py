@@ -27,6 +27,12 @@ from gate.data import load_clinc_data, LABEL_IN_SCOPE, LABEL_OOS
 from gate.model import ScopeGateClassifier, DEFAULT_ENCODER
 from gate.baselines import compute_binary_metrics_at_threshold, find_optimal_threshold
 
+try:
+    import mlflow
+    MLFLOW_AVAILABLE = True
+except ImportError:
+    MLFLOW_AVAILABLE = False
+
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
