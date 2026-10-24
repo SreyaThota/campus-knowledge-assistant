@@ -135,17 +135,34 @@ flowchart TD
 
 #### Validation Split Benchmark (VALIDATION ONLY - Tuning Set)
 > All numbers below are from `results/val_comparison.md`, evaluated on the CLINC150 validation split ($N = 3{,}100$: $3{,}000$ in-scope, $100$ out-of-scope). Decision thresholds were chosen on this split. These are **not** test numbers.
+>
+> **Definition:** *False rejections*: In-scope student queries wrongly refused by the gate.
 
-| Method | Tuned Threshold ($\tau_{\text{val}}$) | OOS $F_1$ | OOS Recall | OOS Precision | In-Scope Acceptance |
+| Method | Tuned Threshold ($\tau_{\text{val}}$) | OOS $F_1$ | OOS Recall | OOS Precision | In-Scope Acceptance | False Rejections (FP / 3,000) |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **TF-IDF + Logistic Regression** | 0.5725 | 0.4946 | 0.4600 | 0.5349 | 0.9867 | 40 |
+| **Centroid Cosine Similarity** | 0.8918 | 0.3544 | 0.5900 | 0.2532 | 0.9420 | 174 |
+| **Exemplar Cosine Similarity (Nearest Neighbor)** | 0.5504 | 0.6224 | 0.6100 | 0.6354 | 0.9883 | 35 |
+| **Frozen Embedding + Logistic Regression** | 0.8819 | 0.4878 | 0.4000 | 0.6250 | 0.9920 | 24 |
+| **Learned Scope Gate (Seed 42)** | 0.3858 | 0.7429 | 0.6500 | 0.8667 | 0.9967 | 10 |
+| **Learned Scope Gate (Seed 1337)** | 0.3072 | 0.7416 | 0.6600 | 0.8462 | 0.9960 | 12 |
+| **Learned Scope Gate (Seed 2026)** | 0.3219 | 0.7222 | 0.6500 | 0.8125 | 0.9950 | 15 |
+| **Learned Scope Gate (Mean ± Std across 3 seeds)** | **0.3383 ± 0.0341** | **0.7356 ± 0.0094** | **0.6533 ± 0.0047** | **0.8418 ± 0.0223** | **0.9959 ± 0.0007** | **12.3 ± 2.1** |
+
+#### Decision Surface Analysis: Validation Threshold Sweep ($\tau \in [0.20, 0.50]$)
+A fine-grained threshold sweep evaluated on the validation split across the three trained seeds (42, 1337, 2026) demonstrates empirical operating behavior:
+
+| Threshold ($\tau$) | OOS Recall (Mean ± Std) | OOS Precision (Mean ± Std) | OOS $F_1$ (Mean ± Std) | In-Scope Acceptance | False Rejections (FP / 3,000) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **TF-IDF + Logistic Regression** | 0.5725 | 0.4946 | 0.4600 | 0.5349 | 0.9867 |
-| **Centroid Cosine Similarity** | 0.8918 | 0.3544 | 0.5900 | 0.2532 | 0.9420 |
-| **Exemplar Cosine Similarity (Nearest Neighbor)** | 0.5504 | 0.6224 | 0.6100 | 0.6354 | 0.9883 |
-| **Frozen Embedding + Logistic Regression** | 0.8819 | 0.4878 | 0.4000 | 0.6250 | 0.9920 |
-| **Learned Scope Gate (Seed 42)** | 0.3858 | 0.7429 | 0.6500 | 0.8667 | 0.9967 |
-| **Learned Scope Gate (Seed 1337)** | 0.3072 | 0.7416 | 0.6600 | 0.8462 | 0.9960 |
-| **Learned Scope Gate (Seed 2026)** | 0.3219 | 0.7222 | 0.6500 | 0.8125 | 0.9950 |
-| **Learned Scope Gate (Mean ± Std across 3 seeds)** | **0.3383 ± 0.0341** | **0.7356 ± 0.0094** | **0.6533 ± 0.0047** | **0.8418 ± 0.0223** | **0.9959 ± 0.0007** |
+| **0.20** | 0.6633 ± 0.0047 | 0.7809 ± 0.0180 | 0.7172 ± 0.0057 | 0.9938 ± 0.0007 | 18.7 ± 2.1 |
+| **0.25** | 0.6600 ± 0.0000 | 0.7957 ± 0.0204 | 0.7214 ± 0.0085 | 0.9943 ± 0.0007 | 17.0 ± 2.2 |
+| **0.30** | 0.6567 ± 0.0047 | 0.8110 ± 0.0180 | 0.7257 ± 0.0095 | 0.9949 ± 0.0006 | 15.3 ± 1.7 |
+| **0.35** | 0.6467 ± 0.0094 | 0.8257 ± 0.0131 | 0.7252 ± 0.0076 | 0.9954 ± 0.0004 | 13.7 ± 1.2 |
+| **0.40** | 0.6300 ± 0.0141 | 0.8403 ± 0.0270 | 0.7201 ± 0.0191 | 0.9960 ± 0.0007 | 12.0 ± 2.2 |
+| **0.45** | 0.6100 ± 0.0163 | 0.8438 ± 0.0335 | 0.7081 ± 0.0225 | 0.9962 ± 0.0009 | 11.3 ± 2.6 |
+| **0.50** | 0.5967 ± 0.0094 | 0.8449 ± 0.0268 | 0.6993 ± 0.0145 | 0.9963 ± 0.0007 | 11.0 ± 2.2 |
+
+*Decision Surface Finding:* The measurement reveals that the decision surface is **not** a steep cliff with volatile swings. Instead, between $\tau = 0.25$ and $\tau = 0.40$, $F_1$ forms a forgiving plateau ($0.720\text{--}0.726$). Across this entire range, recall shifts by only 3.0 percentage points ($66.0\% \to 63.0\%$) and in-scope acceptance remains stable ($99.43\% \to 99.60\%$). Over the wider 0.30 span ($\tau = 0.20 \to 0.50$), recall shifts by only 6.7 points ($66.3\% \to 59.7\%$) while false rejections drop from 18.7 to 11.0.
 
 #### CLINC Test Split Benchmark (Held-Out Final Evaluation)
 - **Status:** TBD after campus freeze (Evaluated once with thresholds fixed from validation; no re-tuning on test).
@@ -162,11 +179,18 @@ flowchart TD
 3. **Unweighted CrossEntropyLoss:** In early experiments, unweighted loss caused the classifier to collapse entirely to the majority in-scope class, producing 0% recall on out-of-scope queries.
 
 ### Limits
-1. **Validation-Only Numbers:** Current quantitative comparisons reflect the validation split only. Generalization to unseen test distributions and zero-shot campus transfer is unproven until final evaluation on frozen test data.
-2. **Synthetic vs Authentic Student Query Distribution:** CLINC150 queries are full, grammatically structured sentences. Actual campus queries frequently exhibit non-standard abbreviations ("bib", "ects", "fpso"), typos, half-sentences, and code-switching (mixed German-English).
-3. **Cross-Lingual Transfer:** The underlying encoder (`all-MiniLM-L6-v2`) and the training set are English-focused. German query performance is experimental and uncalibrated until validated on the campus set.
-4. **Leakage Verification Bounds:** The split integrity check only filters exact lowercase string matches; semantic near-duplicates are not caught by this check.
-5. **Campus Set Sample Size:** The campus evaluation set ($N \approx 110\text{--}140$) provides directional sanity checking rather than statistically powered proof ($\pm 12\text{--}15\%$ margin of error on small subsets).
+1. **Validation Split Granularity & Dual-Use:** The validation split contains only 100 out-of-scope (OOS) queries ($N = 3{,}100$: 3,000 in-scope, 100 OOS). Consequently, a single misclassified query moves recall by an entire 1.0 percentage point. Furthermore, this exact split was used for both threshold selection ($\tau$) and architecture comparison, introducing an inherent risk of optimistic selection bias.
+2. **Bootstrap 95% Confidence Intervals & 11-Point Gap:** While the Learned Gate point-estimate mean $F_1$ leads the Exemplar Cosine baseline by $\approx +11.3$ points ($0.7356$ vs $0.6224 / 0.6154$), non-parametric bootstrap resampling ($B = 1{,}000$) reveals overlapping 95% confidence intervals due to the small validation sample:
+   - *Exemplar Cosine ($\tau = 0.5504$):* $F_1 \in [0.5301, 0.6909]$, Recall $\in [0.5000, 0.6939]$
+   - *Learned Gate Seed 42 ($\tau = 0.3858$):* $F_1 \in [0.6667, 0.8114]$, Recall $\in [0.5607, 0.7411]$
+   - *Learned Gate Seed 1337 ($\tau = 0.3072$):* $F_1 \in [0.6667, 0.8093]$, Recall $\in [0.5700, 0.7525]$
+   - *Learned Gate Seed 2026 ($\tau = 0.3219$):* $F_1 \in [0.6437, 0.7919]$, Recall $\in [0.5565, 0.7383]$
+   Because the upper bound of the Exemplar Cosine CI ($0.6909$) overlaps the lower bounds of the Learned Gate models ($0.6437\text{--}0.6667$), the 11-point gap cannot be established as statistically non-overlapping on validation alone; conclusive verification requires the 1,000 OOS queries of the held-out test split.
+3. **Validation-Only Numbers:** Current quantitative comparisons reflect the validation split only. Generalization to unseen test distributions and zero-shot campus transfer is unproven until final evaluation on frozen test data.
+4. **Synthetic vs Authentic Student Query Distribution:** CLINC150 queries are full, grammatically structured sentences. Actual campus queries frequently exhibit non-standard abbreviations ("bib", "ects", "fpso"), typos, half-sentences, and code-switching (mixed German-English).
+5. **Cross-Lingual Transfer:** The underlying encoder (`all-MiniLM-L6-v2`) and the training set are English-focused. German query performance is experimental and uncalibrated until validated on the campus set.
+6. **Leakage Verification Bounds:** The split integrity check only filters exact lowercase string matches; semantic near-duplicates are not caught by this check.
+7. **Campus Set Sample Size:** The campus evaluation set ($N \approx 110\text{--}140$) provides directional sanity checking rather than statistically powered proof ($\pm 12\text{--}15\%$ margin of error on small subsets).
 
 ### How to Reproduce
 1. **Verify Split Disjointness:**
